@@ -1,0 +1,109 @@
+#!/usr/bin/env bash
+# seclab — cross-platform security research lab launcher
+#
+# Usage:
+#   seclab install                  # show install commands for your OS
+#   seclab check                    # verify tools are present
+#   seclab env [target]             # open a shell with env for current OS
+#   seclab ios [target] [--udid X]  # open a shell with iOS env (any host)
+#   seclab list                     # list research targets
+#   seclab new <target> <type>      # scaffold a target dir
+#                                     type: macos | linux | ios | generic
+#
+# Project: https://github.com/<your-user>/seclab
+
+set -euo pipefail
+
+SECLAB_ROOT="${SECLAB_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
+LIB="$SECLAB_ROOT/lib"
+TARGETS_DIR="${SECLAB_TARGETS_DIR:-$HOME/.seclab/targets}"
+mkdir -p "$TARGETS_DIR"
+
+# shellcheck source=lib/platform.sh
+source "$LIB/platform.sh"
+
+usage() {
+    sed -n '2,14p' "$0" | sed 's/^# \{0,1\}//'
+}
+
+run_shell() {
+    local platform="$1"
+    local target="${2:-scratch}"
+    local target_dir="$TARGETS_DIR/$target"
+    mkdir -p "$target_dir"
+
+    export SECLAB_PLATFORM="$platform"
+    export SECLAB_TARGET_NAME="$target"
+    export SECLAB_TARGET_DIR="$target_dir"
+
+    cd "$target_dir"
+    local sh="${SHELL:-/bin/bash}"
+    exec "$sh" -i -c "
+        source '$LIB/platform.sh'
+        source '$LIB/env-common.sh'
+        case \"\$SECLAB_PLATFORM\" in
+            macos) source '$LIB/env-macos.sh' ;;
+            linux|wsl) source '$LIB/env-linux.sh' ;;
+            ios)       source '$LIB/env-ios.sh' ;;
+        esac
+        exec '$sh' -i
+    "
+}
+
+cmd="${1:-}"; shift || true
+
+case "$cmd" in
+    install)
+        case "$SECLAB_OS" in
+            macos)     bash "$LIB/install/macos.sh" ;;
+            linux|wsl) bash "$LIB/install/linux.sh" ;;
+            windows)   cat "$LIB/install/windows.md" ;;
+            *)         echo "OS no soportado: $SECLAB_OS"; exit 1 ;;
+        esac
+        ;;
+    check)
+        bash "$LIB/check.sh"
+        ;;
+    env)
+        run_shell "$SECLAB_OS" "${1:-scratch}"
+        ;;
+    macos)  run_shell "macos" "${1:-scratch}" ;;
+    linux)  run_shell "linux" "${1:-scratch}" ;;
+    ios)
+        target="scratch"; udid=""
+        while [[ $# -gt 0 ]]; do
+            case "$1" in
+                --udid) udid="$2"; shift 2 ;;
+                *)      target="$1"; shift ;;
+            esac
+        done
+        export SECLAB_UDID="$udid"
+        run_shell "ios" "$target"
+        ;;
+    list)
+        echo "Targets in $TARGETS_DIR:"
+        ls -1 "$TARGETS_DIR" 2>/dev/null | sed 's/^/  /' || echo "  (none)"
+        ;;
+    new)
+        name="${1:?nombre requerido}"
+        type="${2:?tipo requerido (macos|linux|ios|generic)}"
+        d="$TARGETS_DIR/$name"
+        mkdir -p "$d"/{captures,binaries,scripts,reports}
+        cat > "$d/README.md" <<EOF
+# $name ($type)
+
+Created: $(date -u +%Y-%m-%dT%H:%M:%SZ)
+Host OS: $SECLAB_OS
+
+## Hypothesis
+
+## Surface
+
+## Findings
+
+EOF
+        echo "Target created: $d"
+        ;;
+    ""|-h|--help) usage ;;
+    *) echo "unknown: $cmd"; usage; exit 1 ;;
+esac

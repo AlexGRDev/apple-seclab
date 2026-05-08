@@ -1,0 +1,24 @@
+# Python venv (created by users locally)
+.venv/
+__pycache__/
+*.pyc
+
+# Local research targets (contain potentially sensitive data)
+.seclab/
+targets/
+
+# Build / extracted artifacts
+*.ipsw
+*.dmg
+*.bin.extracted/
+ipsw-work/
+
+# Editor
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*~
+
+# Local install / state
+.tools/
