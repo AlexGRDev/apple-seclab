@@ -82,7 +82,9 @@ case "$cmd" in
         ;;
     list)
         echo "Targets in $TARGETS_DIR:"
-        ls -1 "$TARGETS_DIR" 2>/dev/null | sed 's/^/  /' || echo "  (none)"
+        find "$TARGETS_DIR" -mindepth 1 -maxdepth 1 -type d -printf '  %f\n' 2>/dev/null \
+            || (cd "$TARGETS_DIR" 2>/dev/null && for d in */; do printf '  %s\n' "${d%/}"; done) \
+            || echo "  (none)"
         ;;
     new)
         name="${1:?nombre requerido}"

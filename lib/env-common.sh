@@ -13,13 +13,15 @@ alias t='cd "$SECLAB_TARGET_DIR"'
 alias notes='${EDITOR:-vi} "$SECLAB_TARGET_DIR/README.md"'
 capture() {
     local d="$SECLAB_TARGET_DIR/captures"
-    mkdir -p "$d"; cd "$d"
+    mkdir -p "$d"
+    cd "$d" || return 1
 }
 
 # Network helpers
 alias mitm='mitmproxy --listen-port 8888'
 mitmdump-save() {
-    local f="$SECLAB_TARGET_DIR/captures/mitm-$(date +%Y%m%d-%H%M%S).flow"
+    local f
+    f="$SECLAB_TARGET_DIR/captures/mitm-$(date +%Y%m%d-%H%M%S).flow"
     mkdir -p "$(dirname "$f")"
     mitmdump -w "$f" --listen-port 8888
 }

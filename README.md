@@ -1,5 +1,8 @@
 # seclab
 
+[![shellcheck](https://github.com/<your-user>/seclab/actions/workflows/shellcheck.yml/badge.svg)](https://github.com/<your-user>/seclab/actions/workflows/shellcheck.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 Cross-platform security research lab launcher. One command bootstraps a
 shell environment configured for macOS, Linux or iOS/iPadOS device research.
 

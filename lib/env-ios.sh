@@ -13,7 +13,8 @@ devinfo() {
 }
 
 syslog-capture() {
-    local f="$SECLAB_TARGET_DIR/captures/syslog-$(date +%Y%m%d-%H%M%S).log"
+    local f
+    f="$SECLAB_TARGET_DIR/captures/syslog-$(date +%Y%m%d-%H%M%S).log"
     mkdir -p "$(dirname "$f")"
     echo "Logging to $f (Ctrl-C to stop)"
     if command -v idevicesyslog >/dev/null 2>&1; then
@@ -24,7 +25,8 @@ syslog-capture() {
 }
 
 screenshot-now() {
-    local f="$SECLAB_TARGET_DIR/captures/shot-$(date +%Y%m%d-%H%M%S).png"
+    local f
+    f="$SECLAB_TARGET_DIR/captures/shot-$(date +%Y%m%d-%H%M%S).png"
     mkdir -p "$(dirname "$f")"
     pymobiledevice3 developer dvt screenshot "$f" ${SECLAB_UDID:+--udid "$SECLAB_UDID"}
     echo "Saved: $f"
@@ -33,8 +35,9 @@ screenshot-now() {
 ipsw-here() {
     local f="${1:?uso: ipsw-here <archivo.ipsw>}"
     f="$(realpath "$f")"
-    cd "$SECLAB_TARGET_DIR"
-    mkdir -p ipsw-work && cd ipsw-work
+    cd "$SECLAB_TARGET_DIR" || return 1
+    mkdir -p ipsw-work
+    cd ipsw-work || return 1
     ipsw extract "$f" --kernel --dyld --files
 }
 
