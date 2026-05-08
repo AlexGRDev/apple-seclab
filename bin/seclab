@@ -10,7 +10,7 @@
 #   seclab new <target> <type>      # scaffold a target dir
 #                                     type: macos | linux | ios | generic
 #
-# Project: https://github.com/<your-user>/seclab
+# Project: https://github.com/AlexGRDev/seclab
 
 set -euo pipefail
 

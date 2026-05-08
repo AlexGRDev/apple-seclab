@@ -1,6 +1,6 @@
 # seclab
 
-[![shellcheck](https://github.com/<your-user>/seclab/actions/workflows/shellcheck.yml/badge.svg)](https://github.com/<your-user>/seclab/actions/workflows/shellcheck.yml)
+[![shellcheck](https://github.com/AlexGRDev/seclab/actions/workflows/shellcheck.yml/badge.svg)](https://github.com/AlexGRDev/seclab/actions/workflows/shellcheck.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Cross-platform security research lab launcher. One command bootstraps a
@@ -25,7 +25,7 @@ capturing logs. `seclab` collapses that ritual into a single command.
 ## Install
 
 ```bash
-git clone https://github.com/<your-user>/seclab ~/Projects/seclab
+git clone https://github.com/AlexGRDev/seclab ~/Projects/seclab
 echo 'export PATH="$HOME/Projects/seclab/bin:$PATH"' >> ~/.zshrc   # or ~/.bashrc
 source ~/.zshrc
 seclab install     # prints the install commands for your OS, you copy/paste
