@@ -2,9 +2,11 @@
 
 ## iOS — investigate an Activation Lock bypass
 
+Works from any host (macOS, Linux, WSL, Windows via WSL).
+
 ```bash
-seclab new al-bypass ios
-seclab ios al-bypass --udid <YOUR-UDID>
+seclab target new al-bypass ios
+seclab env al-bypass
 
 # inside the lab shell:
 devs                                    # confirm device
@@ -19,8 +21,8 @@ notes                                   # write up findings
 ## macOS — analyze a suspicious binary
 
 ```bash
-seclab new sketchy-helper macos
-seclab macos sketchy-helper
+seclab target new sketchy-helper generic
+seclab env sketchy-helper
 
 # inside:
 cp /path/to/Sketchy.app/Contents/MacOS/Sketchy binaries/
@@ -33,11 +35,26 @@ r2 -A binaries/Sketchy                  # interactive disasm
 ## Linux — container escape research
 
 ```bash
-seclab new k8s-esc linux
-seclab linux k8s-esc
+seclab target new k8s-esc generic
+seclab env k8s-esc
 
 # inside:
 linked /usr/bin/runc
 sect /usr/bin/runc
 trace-cmd ls /                          # strace a command
 ```
+
+## Windows — static analysis of a signed binary (Git Bash)
+
+```bash
+seclab target new pe-triage generic
+seclab env pe-triage
+
+# inside:
+cp /c/path/to/sample.exe binaries/
+sig binaries/sample.exe                 # Authenticode signature (via powershell.exe)
+linked binaries/sample.exe              # imported DLLs (needs mingw-w64 binutils)
+```
+
+For dynamic analysis (Frida, dtrace/strace-equivalents), run seclab under
+WSL2 instead — see `seclab install`.

@@ -1,44 +1,72 @@
 # Apple Security Lab
 
-[![shellcheck](https://github.com/AlexGRDev/seclab/actions/workflows/shellcheck.yml/badge.svg)](https://github.com/AlexGRDev/seclab/actions/workflows/shellcheck.yml)
+[![shellcheck](https://github.com/AlexGRDev/apple-seclab/actions/workflows/shellcheck.yml/badge.svg)](https://github.com/AlexGRDev/apple-seclab/actions/workflows/shellcheck.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**Apple Security Lab** is an open-source framework for deploying reproducible security research environments across **macOS, iOS, iPadOS and Linux**.
+**Apple Security Lab** is an open-source command-line framework for building reproducible security research environments across the Apple ecosystem.
 
-Designed for reverse engineering, dynamic analysis, vulnerability research and Apple ecosystem security.
+It provides a modular CLI for setting up research workspaces, managing analysis profiles, validating development environments and organizing security research projects.
+
+> Designed for macOS, iOS, iPadOS, Apple Silicon and cross-platform security research.
 
 ---
 
 ## Features
 
-- 🍎 Apple-first workflow
+- 🍎 Apple-first security research workflow
+- ⚡ Modular command-line interface
 - 🔬 Reproducible research environments
-- ⚡ One-command workspace bootstrap
-- 🧩 Modular architecture
-- 📦 Cross-platform support
-- 🛠 Built-in research helpers
-- 📁 Structured research projects
-- 📖 Writeups, captures and PoCs in one place
+- 📂 Structured research workspaces
+- 🧩 Extensible command architecture
+- 🛠 Built-in environment validation
+- 🌍 Cross-platform (macOS, Linux, Windows via WSL2 or Git Bash)
 
 ---
 
-## Quick Start
+# Installation
+
+Clone the repository.
 
 ```bash
-seclab macos safari
+git clone https://github.com/AlexGRDev/apple-seclab.git
+cd apple-seclab
 ```
 
-```bash
-seclab ios activation-lock
-```
+Add the executable to your PATH.
 
 ```bash
-seclab linux kernel
+export PATH="$PWD/bin:$PATH"
 ```
+
+Verify the installation.
+
+```bash
+seclab version
+```
+
+---
+
+# Quick Start
+
+Display help.
+
+```bash
+seclab help
+```
+
+Verify your environment.
+
+```bash
+seclab doctor
+```
+
+Check installed tooling.
 
 ```bash
 seclab check
 ```
+
+Display installation instructions.
 
 ```bash
 seclab install
@@ -46,126 +74,190 @@ seclab install
 
 ---
 
-## Why?
+# CLI
 
-Security research should focus on understanding systems—not rebuilding your environment every morning.
+```
+seclab
 
-Apple Security Lab automates the repetitive setup required for security research by preparing a consistent workspace with the right tooling, aliases and project structure.
+Commands
 
-Instead of spending time configuring shells, creating folders and remembering commands, you can immediately start reversing binaries, tracing processes or analysing devices.
+help        Display help information
+
+version     Show current version
+
+doctor      Validate host environment
+
+check       Verify installed tools
+
+install     Display installation instructions
+
+env         Launch a research environment
+
+target      Manage research targets
+
+profile     Manage research profiles
+```
 
 ---
 
-## Research Workflows
-
-Apple Security Lab supports workflows such as:
-
-- Reverse Engineering
-- Dynamic Instrumentation
-- Binary Analysis
-- Apple Platform Security
-- Browser Security
-- WebKit Research
-- XNU Research
-- Malware Analysis
-- Device Forensics
-- Vulnerability Research
-
----
-
-## Supported Platforms
-
-| Platform | Status |
-|----------|--------|
-| macOS (Apple Silicon) | ✅ Recommended |
-| macOS (Intel) | ✅ Supported |
-| Linux | ✅ Supported |
-| WSL2 | ✅ Supported |
-| Native Windows | ⚠ Experimental |
-
----
-
-## Repository Structure
+# Repository Structure
 
 ```
-seclab/
-├── bin/
-├── lib/
-├── modules/
-├── profiles/
-├── examples/
-├── docs/
-└── research/
-```
+apple-seclab/
 
-Research projects are automatically organized as:
+bin/
+    seclab
 
-```
-research/
+lib/
 
-project-name/
+    commands/
+
+    core/
+
+    platforms/
+
+    profiles/
+
+    utils/
+
+docs/
+
+examples/
+
+tests/
+
+assets/
+
+.github/
+
+LICENSE
+
+NOTICE
 
 README.md
 
-captures/
+SECURITY.md
 
-scripts/
-
-binaries/
-
-reports/
-
-notes/
+Makefile
 ```
 
 ---
 
-## Integrated Tooling
+# Project Layout
 
-Apple Security Lab integrates naturally with tools commonly used by security researchers.
+```
+bin/
+```
 
-| Category | Examples |
-|----------|----------|
-| Reverse Engineering | Ghidra, Hopper, radare2 |
-| Dynamic Analysis | Frida, LLDB |
-| Binary Analysis | otool, nm, objdump |
-| Apple Tooling | codesign, plutil, security |
-| Device Research | libimobiledevice, idevice* |
-| Network Analysis | mitmproxy, tcpdump |
+CLI entry point.
+
+```
+lib/core/
+```
+
+Framework internals.
+
+```
+lib/commands/
+```
+
+User-facing CLI commands.
+
+```
+lib/platforms/
+```
+
+Platform-specific functionality.
+
+```
+lib/profiles/
+```
+
+Research profiles.
+
+```
+lib/utils/
+```
+
+Shared helper functions.
 
 ---
 
-## Roadmap
+# Roadmap
 
-- [x] Workspace launcher
-- [x] Cross-platform support
-- [x] Research project scaffolding
-- [ ] Modular profiles
-- [ ] Frida integration
-- [ ] LLDB helpers
+## Core
+
+- [x] Modular CLI architecture
+- [x] Command dispatcher
+- [x] Project documentation
+
+## Environment
+
+- [x] Platform detection (macOS, Linux, WSL, Windows)
+- [x] Automatic dependency checks
+- [x] Homebrew integration
+- [x] Linux package manager support
+
+## Research
+
+- [ ] Research targets
+- [ ] Workspace templates
+- [ ] Session management
+
+## Apple
+
 - [ ] WebKit profile
 - [ ] XNU profile
-- [ ] Apple Silicon profile
-- [ ] Automated research environments
+- [ ] Mach profile
+- [ ] TCC profile
+- [ ] Sandbox profile
+- [ ] Objective-C helpers
+- [ ] Swift helpers
+- [ ] Frida integration
+- [ ] LLDB integration
 
 ---
 
-## Philosophy
+# Philosophy
 
-Apple Security Lab does **not** try to replace professional reverse engineering tools.
+Apple Security Lab is designed to reduce the overhead of preparing research environments.
 
-Instead, it provides a reproducible foundation that lets researchers spend less time configuring environments and more time understanding how Apple's software works.
+Rather than replacing existing reverse engineering tools, it provides a reproducible foundation that lets researchers focus on understanding systems instead of configuring them.
+
+The project emphasizes:
+
+- Simplicity
+- Reproducibility
+- Modularity
+- Cross-platform compatibility
+- Apple ecosystem research
 
 ---
 
-## License
+# Contributing
 
-MIT
+Contributions are welcome.
+
+Please read:
+
+- CONTRIBUTING.md
+- SECURITY.md
+- NOTICE
+
+before opening a Pull Request.
 
 ---
 
-## Disclaimer
+# License
 
-Apple Security Lab is intended exclusively for **authorized security research**.
+Released under the MIT License.
 
-Only use it against systems and devices that you own or have explicit permission to test.
+See the [LICENSE](LICENSE) file for details.
+
+---
+
+# Disclaimer
+
+Apple Security Lab is intended exclusively for authorized security research.
+
+Only use this software on systems and devices that you own or are explicitly authorized to assess.
