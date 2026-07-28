@@ -19,6 +19,7 @@ It provides a modular CLI for setting up research workspaces, managing analysis 
 - 📂 Structured research workspaces
 - 🧩 Extensible command architecture
 - 🛠 Built-in environment validation
+- 📦 `check` auto-installs missing tooling via your package manager (or pip, into a repo-local venv)
 - 🌍 Cross-platform (macOS, Linux, Windows via WSL2 or Git Bash)
 
 ---
@@ -72,30 +73,36 @@ Display installation instructions.
 seclab install
 ```
 
+Scaffold a research target and open its shell.
+
+```bash
+seclab target new my-target ios
+seclab env my-target
+```
+
 ---
 
 # CLI
 
 ```
-seclab
+seclab <command> [arguments]
 
-Commands
+help                          Display help information
 
-help        Display help information
+version                       Show current version
 
-version     Show current version
+doctor                        Validate the host environment seclab itself needs
 
-doctor      Validate host environment
+check                         Verify installed tools, auto-installing what's missing
 
-check       Verify installed tools
+install                       Display installation instructions for this OS
 
-install     Display installation instructions
+env [target]                  Open a research shell (default target: scratch)
 
-env         Launch a research environment
+target new <name> [profile]   Scaffold a new research target (default profile: generic)
+target list                   List existing research targets
 
-target      Manage research targets
-
-profile     Manage research profiles
+profile list                  List available research profiles
 ```
 
 ---
@@ -200,7 +207,7 @@ Shared helper functions.
 
 ## Research
 
-- [ ] Research targets
+- [x] Research targets
 - [ ] Workspace templates
 - [ ] Session management
 
