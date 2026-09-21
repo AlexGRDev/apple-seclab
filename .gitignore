@@ -22,3 +22,9 @@ ipsw-work/
 
 # Local install / state
 .tools/
+
+# Contexto de trabajo: vive en el directorio, no se publica (repo publico)
+/CONTEXT.md
+/STATE.md
+/PITFALLS.md
+sessions/
