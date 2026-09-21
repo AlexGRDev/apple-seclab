@@ -1,10 +1,3 @@
----
-project: apple-seclab
-type: concept
-tags: [mach-o, seguridad-apple]
-aliases: ["Mach-O"]
----
-
 # Mach-O
 
 Formato de ejecutable de Darwin. Un binario se divide en segmentos y secciones,
@@ -18,8 +11,8 @@ apunta a un literal, y saltar ahí provoca un crash propio.
 Un binario puede ser fat (varias slices: `arm64`, `arm64e`, `x86_64`), y la
 ausencia de la slice esperada es causa de fallo de carga.
 
-Dónde se usa: [[projects/apple-seclab/PITFALLS]] recoge la regla de secciones y
-el orden de diagnóstico; [[projects/crossover-steam/PITFALLS]] lo menciona al
+Dónde se usa: [PITFALLS.md](../PITFALLS.md) recoge la regla de secciones y
+el orden de diagnóstico; ~/Documents/Dev/crossover-steam/PITFALLS.md lo menciona al
 comparar con los PE de Windows bajo Wine.
 
-Relacionado: [[projects/apple-seclab/docs/arm64]]
+Relacionado: [arm64.md](arm64.md)
