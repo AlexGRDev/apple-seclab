@@ -1,6 +1,6 @@
 # STATE: Custom IPSW iPhone4,1
 
-Ultima actualizacion: 2026-11-12
+Ultima actualizacion: 2026-11-14
 
 ## Progreso por fases
 
@@ -26,14 +26,35 @@ Ultima actualizacion: 2026-11-12
 - [x] Reconstruir DMG y Custom IPSW -- rootfs_mod.dmg (1.42 GB, SHA1 e75fef78be995bb3a887a6db847ec6cf95b22076); Custom IPSW en assets/ipsw/Custom_iPhone4,1_9.3.5_13G36_NoSetup.ipsw (1.5 GB)
 
 ### Fase 3: Flasheo
-- [ ] Entrar en Pwned DFU con ipwndfu
-- [ ] Restaurar con idevicerestore -P
-- [ ] Verificar arranque sin bootloop
-- [ ] Verificar ausencia de pantalla de activacion
+
+Estado: BLOQUEADO por hub USB. Ver PITFALLS P11.
+
+Cadena de restore verificada (DFU -> idevicerestore v1.0.0-git-6cead6b):
+- [x] DFU detectado
+- [x] iBSS enviado (80410 bytes)
+- [x] iBEC enviado (281676 bytes) -- IMPORTANTE: usar version OLD de idevicerestore (~/tools/idevicerestore). La version nueva envia 278924 bytes y falla.
+- [x] RestoreLogo enviado
+- [x] RestoreRamDisk enviado (23027776 bytes = 058-49032-036.dmg, ramdisk RESTORE)
+- [x] RestoreDeviceTree enviado
+- [x] RestoreKernelCache enviado (10722636 bytes)
+- [x] Restore OS arranca (logo Apple visible en pantalla)
+- [ ] BLOQUEADO: restore OS no aparece en usbmuxd ni en ioreg -- hub GenesysLogic bloquea re-enumeracion USB
+
+Proximos pasos:
+- Opcion A: usar adaptador USB-C -> USB-A simple (sin hub multi-puerto)
+- Opcion B: UTM + Ubuntu ARM64 + idevicerestore en Linux con USB passthrough
+- Pendiente aun: parchear ASR en ramdisk RESTORE (058-49032-036.dmg) para bypass firma
+
+Modificacion en ~/tools/idevicerestore/src/idevicerestore.c:
+- Polling activo cada 1s con idevice_get_device_list() en lugar de esperar solo evento usbmuxd
+- Timeout ampliado a 15 min (era 5 min)
+- El restore OS aparece brevemente en usbmuxd (confirmado en un intento) pero el polling de 1s no lo capta consistentemente con el hub
 
 ## Ultimo resultado
 
-Fase 2 completa. Custom IPSW listo con Setup.app eliminado y bypass plists inyectados.
+2026-11-14: Restore OS arranca correctamente (logo Apple visible) pero dispositivo
+invisible para usbmuxd/ioreg durante toda la fase de restore mode. 265 segundos
+de polling con 0 dispositivos detectados. Hub GenesysLogic bloquea re-enumeracion.
 
 ## Proximo paso inmediato
 

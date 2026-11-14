@@ -104,6 +104,52 @@ make COMMONCRYPTO=1 \
   LDLIBS="-lcompression -framework Security -framework CoreFoundation"
 ```
 
+## P11: Hub USB bloquea restore mode en macOS 15 ARM64
+
+**Problema:** Despues de que el restore OS (kernelcache) arranca en el iPhone 4s,
+el dispositivo desaparece completamente del bus USB. No aparece en ioreg (IOUSBDevice)
+ni en usbmuxd. idevicerestore espera el evento de usbmuxd que nunca llega y falla
+con "Device failed to enter restore mode" tras 5 minutos.
+
+**Causa:** Hub USB GenesysLogic entre el Mac ARM64 y el iPhone. El hub no re-enumera
+el dispositivo correctamente cuando el restore OS reinicializa el controlador USB.
+macOS 15 (Darwin 27.x) tiene incompatibilidades con la re-enumeracion de dispositivos
+iOS 32-bit a traves de hubs USB.
+
+**Sintoma concreto:** Logo de manzana estatico en pantalla (restore OS vivo), pero
+`idevice_id -l` y `ioreg -c IOUSBDevice` devuelven 0 dispositivos durante toda la
+espera.
+
+**Soluciones:**
+1. Conectar con adaptador USB-C -> USB-A simple (un solo conector, sin hub multi-puerto).
+2. UTM + Ubuntu ARM64 + idevicerestore en Linux: Linux maneja hubs USB con dispositivos
+   iOS 32-bit sin este problema. USB passthrough en UTM pasa el dispositivo directamente.
+3. Mac con puerto USB-A nativo (Intel Mac o Mac antiguo).
+
+**No funciona:** Reconectar el cable USB con el restore OS activo, aumentar el timeout
+de idevicerestore, polling activo via idevice_get_device_list().
+
+## P12: idevicerestore version y tamano de iBEC
+
+**Problema:** La version reciente de idevicerestore (latest-26-gc52d923, libtatsu 1.0.5)
+envia iBEC de 278924 bytes para el iPhone 4s y el dispositivo no responde (no pasa a
+Recovery mode tras iBEC).
+
+**Causa:** Diferencia en como se empaqueta el IMG3 con el ticket. La version antigua
+(1.0.0-git-6cead6b, libtatsu 1.1.1) envia 281676 bytes y funciona.
+
+**Solucion:** Usar ~/tools/idevicerestore/src/idevicerestore (version compilada
+manualmente). NO usar el idevicerestore de Legacy-iOS-Kit ni ninguna version brew.
+
+## P13: Empezar desde Recovery mode salta RestoreRamDisk
+
+**Problema:** Si el dispositivo queda en Recovery mode de un intento anterior y se
+lanza idevicerestore desde ese estado, puede saltar el envio del RestoreRamDisk.
+Sin ramdisk, el restore OS no puede arrancar y el proceso falla.
+
+**Solucion:** Siempre empezar desde DFU limpio. Apagar el dispositivo completamente
+(hold Power + Home hasta apagarse) antes de lanzar idevicerestore.
+
 ## P8: baseband y iMessage/FaceTime post-flash
 
 **Problema:** Si se elimina o parchea `mobileactivationd`, los servicios que
